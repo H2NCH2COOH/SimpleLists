@@ -1,0 +1,114 @@
+<html>
+<head>
+  <title>Host Lists</title>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <style type="text/css">
+    .list {
+      float: left;
+      width: 10%;
+      height: 100%;
+      background-color: Gray;
+      padding: 10px;
+    }
+
+    .edit {
+      height: 100%;
+      padding: 10px;
+    }
+
+    .list_item {
+      margin: 5px;
+      padding-left: 5px;
+    }
+
+    .list_item_selected {
+      background-color: White;
+    }
+
+    .host_list {
+      margin-left: 10px;
+      width: 500px;
+      height: 100%;
+      text-align: left;
+    }
+
+    #update {
+      margin-left: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="list">
+    <div><button id="refresh_list">Refresh</button></div>
+  </div>
+  <div class="edit">
+    <div><button id="update">Update</button></div>
+    <textarea type="text" class="host_list"></textarea>
+  </div>
+  <script type="text/javascript">
+    var selected = null;
+
+    function ajaxFailure(err) {
+      alert(JSON.stringify(err));
+    }
+
+    function update() {
+      if (selected == null) {
+        return;
+      }
+
+      var name = selected.data('name');
+      $.ajax({
+        method: 'POST',
+        url: 'https://h2nch2cooh.net/ProxyHostList/list/' + name,
+        data: $('.host_list').val(),
+        contentType: 'text/plain'
+      }).done(function() {
+        alert('Success');
+      }).fail(ajaxFailure);
+    }
+
+    function selectItem() {
+      var item = $(this);
+      if (selected != null) {
+          selected.removeClass('list_item_selected');
+      }
+      item.addClass('list_item_selected');
+      selected = item;
+      $.ajax({
+        dataType: 'text',
+        url: 'https://h2nch2cooh.net/ProxyHostList/list/' + item.data('name')
+      }).done(function(data) {
+        $('.host_list').val(data);
+      }).fail(ajaxFailure);
+    }
+
+    function refreshList() {
+      $('.list_item').remove();
+      $('.host_list').val('');
+      selected = null;
+      $.ajax({
+        dataType: 'text',
+        url: 'https://h2nch2cooh.net/ProxyHostList/list'
+      }).done(function(data) {
+        var list = data.split("\n");
+        for (var i = 0; i < list.length; ++i) {
+          if (list[i] != '') {
+            var item = $('<div class="list_item"><a href="javascript:void(0)">' + list[i] + '</a></div>');
+            item.data({name: list[i]});
+            $('.list').append(item);
+          }
+        }
+        $('.list_item').click(selectItem);
+      }).fail(ajaxFailure);
+    }
+
+    $(function() {
+      $('#refresh_list').click(refreshList);
+      refreshList();
+      $('#update').click(update);
+    });
+  </script>
+</body>
+</html>
