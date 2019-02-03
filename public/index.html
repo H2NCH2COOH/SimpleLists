@@ -61,7 +61,7 @@
       var name = selected.data('name');
       $.ajax({
         method: 'POST',
-        url: 'https://h2nch2cooh.net/ProxyHostList/list/' + name,
+        url: 'https://www.h2nch2cooh.net/ProxyHostList/list/' + name,
         data: $('.host_list').val(),
         contentType: 'text/plain'
       }).done(function() {
@@ -78,7 +78,7 @@
       selected = item;
       $.ajax({
         dataType: 'text',
-        url: 'https://h2nch2cooh.net/ProxyHostList/list/' + item.data('name')
+        url: 'https://www.h2nch2cooh.net/ProxyHostList/list/' + item.data('name')
       }).done(function(data) {
         $('.host_list').val(data);
       }).fail(ajaxFailure);
@@ -90,7 +90,7 @@
       selected = null;
       $.ajax({
         dataType: 'text',
-        url: 'https://h2nch2cooh.net/ProxyHostList/list'
+        url: 'https://www.h2nch2cooh.net/ProxyHostList/list'
       }).done(function(data) {
         var list = data.split("\n");
         for (var i = 0; i < list.length; ++i) {
