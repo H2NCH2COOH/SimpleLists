@@ -1,7 +1,7 @@
 class ListsController < ApplicationController
   protect_from_forgery with: :null_session
 
-  @@root = '/home/wwwroot/ProxyHostList/lists'
+  @@root = '/home/zhiyuanw/ProxyHostList/lists'
 
   def list
     render layout: false, content_type: 'text/plain', plain: Dir.entries(@@root).select {|n| n[0] != '.'}.sort.inject(''){|t,n| t + n + "\n"}
